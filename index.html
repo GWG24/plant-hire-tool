@@ -599,29 +599,25 @@ input[type="range"] {
     </div>
     <div class="home-actions">
       <button class="btn btn-primary" onclick="openAddAppt()">＋ Add Appointment</button>
-      <button class="btn btn-secondary" onclick="changeMonth(-1)">← Prev</button>
-      <button class="btn btn-secondary" onclick="changeMonth(1)">Next →</button>
     </div>
 
-    <!-- Month/Year Header -->
-    <div style="text-align:center; padding:0.5rem 1.5rem 0;">
-      <div id="cal-month-label" style="font-family:'DM Sans',sans-serif; font-size:1.1rem; font-weight:600; color:var(--text);"></div>
-    </div>
-
-    <!-- Calendar Grid -->
-    <div style="padding:1rem 1.5rem;">
-      <!-- Day headers -->
-      <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:4px;">
-        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Sun</div>
-        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Mon</div>
-        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Tue</div>
-        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Wed</div>
-        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Thu</div>
-        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Fri</div>
-        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Sat</div>
+    <!-- Calendar -->
+    <div class="cal-wrapper">
+      <div class="cal-header">
+        <button class="cal-nav-btn" onclick="changeMonth(-1)">←</button>
+        <div class="cal-header-title" id="cal-month-label"></div>
+        <button class="cal-nav-btn" onclick="changeMonth(1)">→</button>
       </div>
-      <!-- Calendar days -->
-      <div id="cal-grid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px;"></div>
+      <div class="cal-day-headers">
+        <div class="cal-day-header">Sun</div>
+        <div class="cal-day-header">Mon</div>
+        <div class="cal-day-header">Tue</div>
+        <div class="cal-day-header">Wed</div>
+        <div class="cal-day-header">Thu</div>
+        <div class="cal-day-header">Fri</div>
+        <div class="cal-day-header">Sat</div>
+      </div>
+      <div class="cal-grid-inner" id="cal-grid"></div>
     </div>
 
     <!-- Upcoming appointments list -->
@@ -1519,16 +1515,23 @@ function renderUpcoming() {
     list.innerHTML = `<div class="jobs-empty"><span class="empty-icon">📅</span><p>No upcoming appointments.<br>Tap <strong>+ Add Appointment</strong> to schedule one.</p></div>`;
     return;
   }
-  list.innerHTML = upcoming.map(a => `
-    <div class="appt-card" onclick="editAppt('${a.id}')">
-      <div class="appt-type-dot" style="background:${APPT_COLORS[a.type]||'#475569'};"></div>
-      <div class="appt-info">
-        <div class="appt-title">${APPT_ICONS[a.type]||'📌'} ${a.client_name}</div>
-        <div class="appt-meta">${a.date}${a.time?' at '+a.time:''} · ${a.type} ${a.address?'· '+a.address:''}</div>
-        ${a.notes?`<div class="appt-meta" style="margin-top:0.2rem;">📝 ${a.notes}</div>`:''}
+  list.innerHTML = upcoming.map(a => {
+    const d = new Date(a.date + 'T12:00:00');
+    const day = d.getDate();
+    const mon = d.toLocaleDateString('en-AU',{month:'short'});
+    return `<div class="appt-card" onclick="editAppt('${a.id}')">
+      <div class="appt-date-badge">
+        <div class="appt-date-day">${day}</div>
+        <div class="appt-date-mon">${mon}</div>
       </div>
-    </div>
-  `).join('');
+      <div class="appt-type-icon ${a.type||'other'}">${APPT_ICONS[a.type]||'📌'}</div>
+      <div class="appt-info">
+        <div class="appt-title">${a.client_name}</div>
+        <div class="appt-meta">${a.time||''} ${a.time?'·':''} ${a.type||'other'}${a.address?' · '+a.address:''}</div>
+        ${a.notes?`<div class="appt-meta" style="margin-top:0.1rem;">📝 ${a.notes}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function calDayClick(dateStr) {
