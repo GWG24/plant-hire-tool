@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0053)file:///C:/Users/marcu/Downloads/plant-hire-tool.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="en">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Plant Hire Assessment Tool — Groundwork Gardens</title>
-<link href="./Plant Hire Assessment Tool — Groundwork Gardens_files/css2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --green: #119600;
@@ -544,11 +544,14 @@ input[type="range"] {
 <!-- MAIN SCREEN -->
 <div class="screen active" id="screen-main">
   <div class="nav-tabs">
-    <div class="nav-tab active" onclick="switchTab(&#39;jobs&#39;)" id="tab-jobs">
+    <div class="nav-tab active" onclick="switchTab('jobs')" id="tab-jobs">
       <span class="nav-tab-icon">📋</span>Jobs
     </div>
-    <div class="nav-tab" onclick="switchTab(&#39;enquiries&#39;)" id="tab-enquiries">
+    <div class="nav-tab" onclick="switchTab('enquiries')" id="tab-enquiries">
       <span class="nav-tab-icon">📥</span>Enquiries
+    </div>
+    <div class="nav-tab" onclick="switchTab('calendar')" id="tab-calendar">
+      <span class="nav-tab-icon">📅</span>Calendar
     </div>
   </div>
 
@@ -563,7 +566,12 @@ input[type="range"] {
       <button class="btn btn-secondary" onclick="loadJobs()">↻ Refresh</button>
     </div>
     <p class="section-label">Recent Jobs</p>
-    <div class="jobs-list" id="jobs-list"><div class="jobs-empty"><span class="empty-icon">🌱</span><p>No jobs yet.<br>Tap <strong>New Job</strong> to start your first assessment.</p></div></div>
+    <div class="jobs-list" id="jobs-list">
+      <div class="jobs-empty">
+        <span class="empty-icon">🌱</span>
+        <p>No jobs yet.<br>Tap <strong>New Job</strong> to start your first assessment.</p>
+      </div>
+    </div>
   </div>
 
   <!-- ENQUIRIES TAB -->
@@ -582,6 +590,44 @@ input[type="range"] {
         <p>No enquiries yet.<br>They'll appear here once someone fills in your website form.</p>
       </div>
     </div>
+  </div>
+  <!-- CALENDAR TAB -->
+  <div id="panel-calendar" style="display:none;">
+    <div class="home-header">
+      <h1>Calendar</h1>
+      <p>Schedule assessments and maintenance visits</p>
+    </div>
+    <div class="home-actions">
+      <button class="btn btn-primary" onclick="openAddAppt()">＋ Add Appointment</button>
+      <button class="btn btn-secondary" onclick="changeMonth(-1)">← Prev</button>
+      <button class="btn btn-secondary" onclick="changeMonth(1)">Next →</button>
+    </div>
+
+    <!-- Month/Year Header -->
+    <div style="text-align:center; padding:0.5rem 1.5rem 0;">
+      <div id="cal-month-label" style="font-family:'DM Sans',sans-serif; font-size:1.1rem; font-weight:600; color:var(--text);"></div>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div style="padding:1rem 1.5rem;">
+      <!-- Day headers -->
+      <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:4px;">
+        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Sun</div>
+        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Mon</div>
+        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Tue</div>
+        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Wed</div>
+        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Thu</div>
+        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Fri</div>
+        <div style="text-align:center;font-size:0.72rem;font-weight:600;color:var(--muted);padding:0.3rem;">Sat</div>
+      </div>
+      <!-- Calendar days -->
+      <div id="cal-grid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:2px;"></div>
+    </div>
+
+    <!-- Upcoming appointments list -->
+    <p class="section-label">Upcoming Appointments</p>
+    <div class="jobs-list" id="appt-list"></div>
+    <div style="height:2rem;"></div>
   </div>
 </div>
 
@@ -661,13 +707,13 @@ input[type="range"] {
         <textarea id="nj-notes" placeholder="Any initial observations about the property…"></textarea>
       </div>
     </div>
-    <button class="btn btn-primary btn-full" onclick="saveNewJob()">Create Job &amp; Start Assessment →</button>
+    <button class="btn btn-primary btn-full" onclick="saveNewJob()">Create Job & Start Assessment →</button>
   </div>
 </div>
 
 <!-- QUOTE SCREEN -->
 <div class="screen" id="screen-quote">
-  <div class="back-bar" onclick="showScreen(&#39;screen-job&#39;)">← Back to Job</div>
+  <div class="back-bar" onclick="showScreen('screen-job')">← Back to Job</div>
   <div class="page-title-bar">
     <h2>Quote Summary</h2>
     <p id="quote-client-name">Client quote</p>
@@ -683,7 +729,7 @@ input[type="range"] {
   <div class="modal">
     <div class="modal-title">
       <span>Add Room</span>
-      <span class="modal-close" onclick="closeModal(&#39;modal-room&#39;)">✕</span>
+      <span class="modal-close" onclick="closeModal('modal-room')">✕</span>
     </div>
     <div class="form-group">
       <label>Room Name *</label>
@@ -792,8 +838,8 @@ input[type="range"] {
     </div>
 
     <div style="display:flex; gap:0.75rem; margin-top:1.2rem;">
-      <button class="btn btn-secondary" style="flex:1;" onclick="closeModal(&#39;modal-room&#39;)">Cancel</button>
-      <button class="btn btn-primary" style="flex:2;" onclick="saveRoom()">Save Room &amp; Get Recommendations →</button>
+      <button class="btn btn-secondary" style="flex:1;" onclick="closeModal('modal-room')">Cancel</button>
+      <button class="btn btn-primary" style="flex:2;" onclick="saveRoom()">Save Room & Get Recommendations →</button>
     </div>
   </div>
 </div>
@@ -803,12 +849,71 @@ input[type="range"] {
   <div class="modal">
     <div class="modal-title">
       <span id="recs-room-title">Plant Recommendations</span>
-      <span class="modal-close" onclick="closeModal(&#39;modal-recs&#39;)">✕</span>
+      <span class="modal-close" onclick="closeModal('modal-recs')">✕</span>
     </div>
     <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">Based on the room conditions, here are the best matches. Tick the ones you want to include in the quote.</p>
     <div id="recs-list"></div>
     <div style="margin-top:1.2rem;">
       <button class="btn btn-primary btn-full" onclick="saveRecs()">Add Selected Plants to Quote →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD/EDIT APPOINTMENT MODAL -->
+<div class="modal-overlay" id="modal-appt">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="appt-modal-title">Add Appointment</span>
+      <span class="modal-close" onclick="closeModal('modal-appt')">✕</span>
+    </div>
+    <div class="form-group">
+      <label>Type *</label>
+      <select id="appt-type">
+        <option value="">Select…</option>
+        <option value="maintenance">🌿 Maintenance Visit</option>
+        <option value="assessment">📋 Site Assessment</option>
+        <option value="delivery">🚚 Delivery & Setup</option>
+        <option value="consultation">💬 Client Consultation</option>
+        <option value="other">📌 Other</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Client Name *</label>
+      <input type="text" id="appt-client" placeholder="e.g. Jane Smith">
+    </div>
+    <div class="form-group">
+      <label>Address / Location</label>
+      <input type="text" id="appt-address" placeholder="e.g. 123 Brunswick St, Fitzroy">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date *</label>
+        <input type="date" id="appt-date">
+      </div>
+      <div class="form-group">
+        <label>Time</label>
+        <input type="time" id="appt-time">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Duration</label>
+      <select id="appt-duration">
+        <option value="30">30 minutes</option>
+        <option value="60" selected>1 hour</option>
+        <option value="90">1.5 hours</option>
+        <option value="120">2 hours</option>
+        <option value="180">3 hours</option>
+        <option value="240">Half day</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Notes</label>
+      <textarea id="appt-notes" placeholder="Any notes about this appointment…" style="min-height:60px;"></textarea>
+    </div>
+    <div style="display:flex; gap:0.75rem; margin-top:1rem;">
+      <button class="btn btn-secondary" style="flex:1;" onclick="closeModal('modal-appt')">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="appt-delete-btn" style="display:none;" onclick="deleteAppt()">Delete</button>
+      <button class="btn btn-primary" style="flex:2;" onclick="saveAppt()">Save Appointment</button>
     </div>
   </div>
 </div>
@@ -870,13 +975,7 @@ function toast(msg) {
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-function switchTab(tab) {
-  document.getElementById('panel-jobs').style.display = tab === 'jobs' ? 'block' : 'none';
-  document.getElementById('panel-enquiries').style.display = tab === 'enquiries' ? 'block' : 'none';
-  document.getElementById('tab-jobs').classList.toggle('active', tab === 'jobs');
-  document.getElementById('tab-enquiries').classList.toggle('active', tab === 'enquiries');
-  if (tab === 'enquiries') loadEnquiries();
-}
+// switchTab defined in calendar section
 
 function selectOpt(el, multi=false) {
   const group = el.dataset.group;
@@ -1315,11 +1414,206 @@ function generatePDF() {
   toast('🖨️ Use Save as PDF in print dialog');
 }
 
+// ── CALENDAR ──
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+let appointments = [];
+let editingApptId = null;
+
+const APPT_COLORS = {
+  maintenance: '#166534',
+  assessment: '#1e40af',
+  delivery: '#92400e',
+  consultation: '#6b21a8',
+  other: '#475569'
+};
+
+const APPT_ICONS = {
+  maintenance: '🌿',
+  assessment: '📋',
+  delivery: '🚚',
+  consultation: '💬',
+  other: '📌'
+};
+
+function switchTab(tab) {
+  ['jobs','enquiries','calendar'].forEach(t => {
+    document.getElementById('panel-' + t).style.display = t === tab ? 'block' : 'none';
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+  });
+  if (tab === 'enquiries') loadEnquiries();
+  if (tab === 'calendar') { loadAppointments(); }
+}
+
+async function loadAppointments() {
+  try {
+    const data = await sbFetch('/rest/v1/plant_hire_appointments?order=date.asc,time.asc');
+    appointments = data;
+    renderCalendar();
+    renderUpcoming();
+  } catch(e) {
+    // table might not exist yet, render empty
+    appointments = [];
+    renderCalendar();
+    renderUpcoming();
+  }
+}
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent = monthNames[calMonth] + ' ' + calYear;
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const daysInPrev = new Date(calYear, calMonth, 0).getDate();
+  const today = new Date();
+
+  let html = '';
+  let totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+  for (let i = 0; i < totalCells; i++) {
+    let day, month, year, otherMonth = false;
+    if (i < firstDay) {
+      day = daysInPrev - firstDay + i + 1;
+      month = calMonth - 1;
+      year = calYear;
+      otherMonth = true;
+    } else if (i >= firstDay + daysInMonth) {
+      day = i - firstDay - daysInMonth + 1;
+      month = calMonth + 1;
+      year = calYear;
+      otherMonth = true;
+    } else {
+      day = i - firstDay + 1;
+      month = calMonth;
+      year = calYear;
+    }
+
+    const dateStr = year + '-' + String(month + 1).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+    const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+    const dayAppts = appointments.filter(a => a.date === dateStr);
+
+    html += `<div class="cal-day ${otherMonth?'other-month':''} ${isToday?'today':''}" onclick="calDayClick('${dateStr}')">
+      <div class="cal-day-num">${day}</div>
+      ${dayAppts.slice(0,2).map(a => `
+        <div class="cal-event ${a.type}" onclick="event.stopPropagation();editAppt('${a.id}')">${APPT_ICONS[a.type]||'📌'} ${a.client_name}</div>
+      `).join('')}
+      ${dayAppts.length > 2 ? `<div style="font-size:0.6rem;color:var(--muted);">+${dayAppts.length-2} more</div>` : ''}
+    </div>`;
+  }
+  document.getElementById('cal-grid').innerHTML = html;
+}
+
+function renderUpcoming() {
+  const today = new Date().toISOString().split('T')[0];
+  const upcoming = appointments.filter(a => a.date >= today).slice(0, 10);
+  const list = document.getElementById('appt-list');
+  if (!upcoming.length) {
+    list.innerHTML = `<div class="jobs-empty"><span class="empty-icon">📅</span><p>No upcoming appointments.<br>Tap <strong>+ Add Appointment</strong> to schedule one.</p></div>`;
+    return;
+  }
+  list.innerHTML = upcoming.map(a => `
+    <div class="appt-card" onclick="editAppt('${a.id}')">
+      <div class="appt-type-dot" style="background:${APPT_COLORS[a.type]||'#475569'};"></div>
+      <div class="appt-info">
+        <div class="appt-title">${APPT_ICONS[a.type]||'📌'} ${a.client_name}</div>
+        <div class="appt-meta">${a.date}${a.time?' at '+a.time:''} · ${a.type} ${a.address?'· '+a.address:''}</div>
+        ${a.notes?`<div class="appt-meta" style="margin-top:0.2rem;">📝 ${a.notes}</div>`:''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function calDayClick(dateStr) {
+  openAddAppt(dateStr);
+}
+
+function openAddAppt(dateStr) {
+  editingApptId = null;
+  document.getElementById('appt-modal-title').textContent = 'Add Appointment';
+  document.getElementById('appt-type').value = '';
+  document.getElementById('appt-client').value = '';
+  document.getElementById('appt-address').value = '';
+  document.getElementById('appt-date').value = dateStr || new Date().toISOString().split('T')[0];
+  document.getElementById('appt-time').value = '09:00';
+  document.getElementById('appt-duration').value = '60';
+  document.getElementById('appt-notes').value = '';
+  document.getElementById('appt-delete-btn').style.display = 'none';
+  openModal('modal-appt');
+}
+
+function editAppt(id) {
+  const a = appointments.find(a => a.id === id);
+  if (!a) return;
+  editingApptId = id;
+  document.getElementById('appt-modal-title').textContent = 'Edit Appointment';
+  document.getElementById('appt-type').value = a.type || '';
+  document.getElementById('appt-client').value = a.client_name || '';
+  document.getElementById('appt-address').value = a.address || '';
+  document.getElementById('appt-date').value = a.date || '';
+  document.getElementById('appt-time').value = a.time || '';
+  document.getElementById('appt-duration').value = a.duration || '60';
+  document.getElementById('appt-notes').value = a.notes || '';
+  document.getElementById('appt-delete-btn').style.display = 'inline-flex';
+  openModal('modal-appt');
+}
+
+async function saveAppt() {
+  const client = document.getElementById('appt-client').value.trim();
+  const date = document.getElementById('appt-date').value;
+  if (!client || !date) { toast('⚠️ Please enter client name and date'); return; }
+
+  const appt = {
+    type: document.getElementById('appt-type').value || 'other',
+    client_name: client,
+    address: document.getElementById('appt-address').value.trim(),
+    date: date,
+    time: document.getElementById('appt-time').value,
+    duration: document.getElementById('appt-duration').value,
+    notes: document.getElementById('appt-notes').value.trim()
+  };
+
+  try {
+    if (editingApptId) {
+      await sbFetch(`/rest/v1/plant_hire_appointments?id=eq.${editingApptId}`, {
+        method: 'PATCH', body: JSON.stringify(appt)
+      });
+      toast('✅ Appointment updated!');
+    } else {
+      await sbFetch('/rest/v1/plant_hire_appointments', {
+        method: 'POST', prefer: 'return=representation', body: JSON.stringify(appt)
+      });
+      toast('✅ Appointment saved!');
+    }
+    closeModal('modal-appt');
+    loadAppointments();
+  } catch(e) {
+    toast('❌ Error saving — check Supabase table exists');
+    console.error(e);
+  }
+}
+
+async function deleteAppt() {
+  if (!confirm('Delete this appointment?')) return;
+  try {
+    await sbFetch(`/rest/v1/plant_hire_appointments?id=eq.${editingApptId}`, { method: 'DELETE' });
+    closeModal('modal-appt');
+    toast('🗑️ Appointment deleted');
+    loadAppointments();
+  } catch(e) { toast('❌ Error deleting'); }
+}
+
 // ── INIT ──
 window.onload = () => {
   loadJobs();
 };
 </script>
-
-
-</body></html>
+</body>
+</html>
