@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)file:///C:/Users/marcu/Downloads/plant-hire-tool.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Plant Hire Assessment Tool — Groundwork Gardens</title>
+<link href="./Plant Hire Assessment Tool — Groundwork Gardens_files/css2" rel="stylesheet">
+<style>
+:root {
+  --green: #119600;
+  --green-dark: #0a6600;
+  --green-light: #e8f5e4;
+  --green-mid: #1db300;
+  --cream: #f9f8f5;
+  --white: #ffffff;
+  --dark: #0f1f0f;
+  --text: #2d3a2d;
+  --muted: #7a8a7a;
+  --border: #dde8dd;
+  --warn: #f59e0b;
+  --danger: #ef4444;
+  --shadow: 0 2px 12px rgba(17,150,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(17,150,0,0.12);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { font-size: 16px; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  background: var(--dark);
+  padding: 0.9rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.topbar-logo {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--green-mid);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.topbar-title {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+  font-weight: 400;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; min-height: calc(100vh - 56px); }
+.screen.active { display: block; }
+
+/* ── HOME / JOB LIST ── */
+.home-header {
+  background: var(--dark);
+  padding: 2rem 1.5rem 1.5rem;
+  color: white;
+}
+.home-header h1 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: var(--white);
+}
+.home-header p { font-size: 0.88rem; color: rgba(255,255,255,0.6); }
+
+.home-actions {
+  padding: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 9999px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.18s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--green); color: white; }
+.btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); }
+.btn-secondary { background: var(--white); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--green-light); border-color: var(--green); }
+.btn-danger { background: #fee2e2; color: var(--danger); }
+.btn-danger:hover { background: #fecaca; }
+.btn-sm { padding: 0.5rem 1rem; font-size: 0.8rem; }
+.btn-full { width: 100%; }
+.btn-icon { width: 36px; height: 36px; padding: 0; border-radius: 50%; }
+
+/* ── JOB CARDS ── */
+.jobs-list { padding: 0 1.5rem 2rem; }
+.jobs-empty {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--muted);
+}
+.jobs-empty .empty-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+.jobs-empty p { font-size: 0.9rem; line-height: 1.5; }
+
+.job-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.3rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.18s;
+  box-shadow: var(--shadow);
+}
+.job-card:hover { border-color: var(--green); transform: translateY(-1px); box-shadow: var(--shadow-lg); }
+.job-card-icon {
+  width: 44px; height: 44px;
+  background: var(--green-light);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.job-card-info { flex: 1; min-width: 0; }
+.job-card-name { font-weight: 600; font-size: 0.95rem; color: var(--text); margin-bottom: 0.2rem; }
+.job-card-meta { font-size: 0.78rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.job-card-arrow { color: var(--muted); font-size: 1rem; flex-shrink: 0; }
+
+.status-badge {
+  display: inline-flex; align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.status-assessment { background: #fef3c7; color: #92400e; }
+.status-quoted { background: #dbeafe; color: #1e40af; }
+.status-active { background: var(--green-light); color: var(--green-dark); }
+
+/* ── SECTION HEADERS ── */
+.section-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  padding: 1.2rem 1.5rem 0.5rem;
+}
+
+/* ── FORMS ── */
+.form-screen { padding: 1.5rem; }
+.form-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+}
+.form-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.form-group { margin-bottom: 1rem; }
+.form-group:last-child { margin-bottom: 0; }
+.form-group label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text);
+  background: var(--cream);
+  outline: none;
+  transition: border-color 0.18s;
+  appearance: none;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: var(--green); background: var(--white); }
+.form-group textarea { resize: vertical; min-height: 80px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+/* ── BACK BUTTON ── */
+.back-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem 0;
+  cursor: pointer;
+  color: var(--green);
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+.back-bar:hover { color: var(--green-dark); }
+
+/* ── PAGE TITLE BAR ── */
+.page-title-bar {
+  padding: 0.75rem 1.5rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+.page-title-bar h2 { font-size: 1.3rem; font-weight: 600; color: var(--text); }
+.page-title-bar p { font-size: 0.83rem; color: var(--muted); margin-top: 0.2rem; }
+
+/* ── ROOMS ── */
+.rooms-list { padding: 0 1.5rem; }
+.room-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.room-card-header {
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+}
+.room-card-header:hover { background: var(--green-light); }
+.room-icon { font-size: 1.2rem; }
+.room-info { flex: 1; }
+.room-name { font-weight: 600; font-size: 0.92rem; }
+.room-meta { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
+.room-actions { display: flex; gap: 0.4rem; }
+.room-body {
+  border-top: 1px solid var(--border);
+  padding: 1.2rem;
+  background: var(--cream);
+}
+
+/* ── CHECKLIST ── */
+.checklist-section { margin-bottom: 1.2rem; }
+.checklist-section-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--green-dark);
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+.checklist-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+.checklist-options.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.checklist-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 400;
+  background: var(--white);
+  transition: all 0.15s;
+  user-select: none;
+}
+.checklist-option.selected {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green-dark);
+  font-weight: 500;
+}
+.checklist-option .opt-icon { font-size: 1rem; flex-shrink: 0; }
+
+/* Slider */
+.slider-wrap { padding: 0.4rem 0; }
+.slider-label-row { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.4rem; }
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--green);
+  height: 4px;
+  border: none;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  padding: 0;
+}
+
+/* ── PLANT RECOMMENDATIONS ── */
+.plant-recs { padding: 0 1.5rem 1.5rem; }
+.rec-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.15s;
+}
+.rec-card.selected { border-color: var(--green); background: var(--green-light); }
+.rec-plant-img {
+  width: 56px; height: 56px;
+  border-radius: var(--radius-sm);
+  object-fit: contain;
+  background: var(--cream);
+  flex-shrink: 0;
+}
+.rec-info { flex: 1; min-width: 0; }
+.rec-name { font-weight: 600; font-size: 0.92rem; margin-bottom: 0.15rem; }
+.rec-reason { font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+.rec-match {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 20px;
+  background: var(--green-light);
+  color: var(--green-dark);
+  white-space: nowrap;
+}
+.rec-price { font-size: 0.8rem; font-weight: 600; color: var(--green); }
+.rec-checkbox { flex-shrink: 0; }
+.rec-checkbox input { width: 20px; height: 20px; accent-color: var(--green); }
+
+/* ── QUOTE SUMMARY ── */
+.quote-screen { padding: 1.5rem; }
+.quote-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+}
+.quote-card-header {
+  background: var(--dark);
+  color: white;
+  padding: 1.2rem 1.5rem;
+}
+.quote-card-header h3 { font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
+.quote-card-header p { font-size: 0.8rem; color: rgba(255,255,255,0.6); }
+.quote-body { padding: 1.2rem 1.5rem; }
+.quote-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+}
+.quote-line:last-child { border-bottom: none; }
+.quote-line-label { color: var(--text); }
+.quote-line-sub { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
+.quote-line-price { font-weight: 600; color: var(--text); font-family: 'DM Mono', monospace; }
+.quote-total {
+  background: var(--green);
+  color: white;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.quote-total-label { font-size: 0.88rem; font-weight: 500; }
+.quote-total-price { font-size: 1.3rem; font-weight: 700; font-family: 'DM Mono', monospace; }
+
+/* ── BOTTOM ACTION BAR ── */
+.action-bar {
+  position: sticky;
+  bottom: 0;
+  background: var(--white);
+  border-top: 1px solid var(--border);
+  padding: 1rem 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  z-index: 50;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--white);
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: slideUp 0.25s ease;
+}
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-close { cursor: pointer; color: var(--muted); font-size: 1.2rem; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--dark);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 300;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── STEP INDICATOR ── */
+.step-bar {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  gap: 0.3rem;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+}
+.step {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  transition: background 0.3s;
+}
+.step.done { background: var(--green); }
+.step.active { background: var(--green-mid); }
+
+/* ── DIVIDER ── */
+.divider { height: 1px; background: var(--border); margin: 0.5rem 0; }
+
+/* ── ENQUIRIES TAB ── */
+.enq-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.3rem;
+  margin-bottom: 0.75rem;
+  box-shadow: var(--shadow);
+}
+.enq-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; }
+.enq-name { font-weight: 600; font-size: 0.95rem; }
+.enq-date { font-size: 0.72rem; color: var(--muted); }
+.enq-details { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+.enq-detail-row { display: flex; gap: 0.5rem; margin-bottom: 0.2rem; }
+.enq-detail-row span:first-child { color: var(--green-dark); font-weight: 500; min-width: 70px; }
+
+/* ── NAV TABS ── */
+.nav-tabs {
+  display: flex;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 56px;
+  z-index: 90;
+}
+.nav-tab {
+  flex: 1;
+  padding: 0.85rem 0.5rem;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.18s;
+  user-select: none;
+}
+.nav-tab.active { color: var(--green); border-bottom-color: var(--green); }
+.nav-tab-icon { display: block; font-size: 1.1rem; margin-bottom: 0.15rem; }
+
+@media (min-width: 600px) {
+  .modal { border-radius: var(--radius); margin: 2rem; max-height: 80vh; }
+  .modal-overlay { align-items: center; }
+  .checklist-options { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">🌿 Groundwork</div>
+  <div class="topbar-title">Plant Hire Tool</div>
+  <div style="width:80px;"></div>
+</div>
+
+<!-- MAIN SCREEN -->
+<div class="screen active" id="screen-main">
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="switchTab(&#39;jobs&#39;)" id="tab-jobs">
+      <span class="nav-tab-icon">📋</span>Jobs
+    </div>
+    <div class="nav-tab" onclick="switchTab(&#39;enquiries&#39;)" id="tab-enquiries">
+      <span class="nav-tab-icon">📥</span>Enquiries
+    </div>
+  </div>
+
+  <!-- JOBS TAB -->
+  <div id="panel-jobs">
+    <div class="home-header">
+      <h1>Site Assessments</h1>
+      <p>Tap a job to continue or start a new assessment</p>
+    </div>
+    <div class="home-actions">
+      <button class="btn btn-primary" onclick="startNewJob()">＋ New Job</button>
+      <button class="btn btn-secondary" onclick="loadJobs()">↻ Refresh</button>
+    </div>
+    <p class="section-label">Recent Jobs</p>
+    <div class="jobs-list" id="jobs-list"><div class="jobs-empty"><span class="empty-icon">🌱</span><p>No jobs yet.<br>Tap <strong>New Job</strong> to start your first assessment.</p></div></div>
+  </div>
+
+  <!-- ENQUIRIES TAB -->
+  <div id="panel-enquiries" style="display:none;">
+    <div class="home-header">
+      <h1>Web Enquiries</h1>
+      <p>Leads from your plant hire website form</p>
+    </div>
+    <div class="home-actions">
+      <button class="btn btn-secondary" onclick="loadEnquiries()">↻ Refresh</button>
+    </div>
+    <p class="section-label">Latest Enquiries</p>
+    <div class="jobs-list" id="enquiries-list">
+      <div class="jobs-empty">
+        <span class="empty-icon">📭</span>
+        <p>No enquiries yet.<br>They'll appear here once someone fills in your website form.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JOB DETAIL SCREEN -->
+<div class="screen" id="screen-job">
+  <div class="back-bar" onclick="goHome()">← Back to Jobs</div>
+  <div class="page-title-bar">
+    <h2 id="job-title">New Assessment</h2>
+    <p id="job-subtitle">Add rooms and complete the assessment checklist</p>
+  </div>
+
+  <div style="padding: 1rem 1.5rem 0.5rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+    <button class="btn btn-primary btn-sm" onclick="openAddRoom()">＋ Add Room</button>
+    <button class="btn btn-secondary btn-sm" onclick="viewQuote()">📄 View Quote</button>
+    <button class="btn btn-secondary btn-sm" onclick="editJobDetails()">✏️ Edit Details</button>
+  </div>
+
+  <p class="section-label">Rooms</p>
+  <div class="rooms-list" id="rooms-list">
+    <div class="jobs-empty" style="padding: 2rem 1.5rem;">
+      <span class="empty-icon">🚪</span>
+      <p>No rooms added yet.<br>Tap <strong>Add Room</strong> to begin your assessment.</p>
+    </div>
+  </div>
+  <div style="height:2rem;"></div>
+</div>
+
+<!-- NEW JOB SCREEN -->
+<div class="screen" id="screen-new-job">
+  <div class="back-bar" onclick="goHome()">← Cancel</div>
+  <div class="page-title-bar">
+    <h2>New Job</h2>
+    <p>Enter client and property details</p>
+  </div>
+  <div class="form-screen">
+    <div class="form-card">
+      <div class="form-card-title">👤 Client Details</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" id="nj-fname" placeholder="Jane">
+        </div>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" id="nj-lname" placeholder="Smith">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Phone</label>
+        <input type="tel" id="nj-phone" placeholder="04XX XXX XXX">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="nj-email" placeholder="jane@email.com">
+      </div>
+    </div>
+    <div class="form-card">
+      <div class="form-card-title">🏠 Property Details</div>
+      <div class="form-group">
+        <label>Address</label>
+        <input type="text" id="nj-address" placeholder="123 Example St, Brunswick VIC 3056">
+      </div>
+      <div class="form-group">
+        <label>Property Type</label>
+        <select id="nj-type">
+          <option value="">Select…</option>
+          <option>Residential — House</option>
+          <option>Residential — Apartment</option>
+          <option>Commercial — Office</option>
+          <option>Commercial — Cafe / Restaurant</option>
+          <option>Commercial — Retail / Shopfront</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <textarea id="nj-notes" placeholder="Any initial observations about the property…"></textarea>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="saveNewJob()">Create Job &amp; Start Assessment →</button>
+  </div>
+</div>
+
+<!-- QUOTE SCREEN -->
+<div class="screen" id="screen-quote">
+  <div class="back-bar" onclick="showScreen(&#39;screen-job&#39;)">← Back to Job</div>
+  <div class="page-title-bar">
+    <h2>Quote Summary</h2>
+    <p id="quote-client-name">Client quote</p>
+  </div>
+  <div class="quote-screen" id="quote-content"></div>
+  <div class="action-bar">
+    <button class="btn btn-primary btn-full" onclick="generatePDF()">⬇ Download PDF Quote</button>
+  </div>
+</div>
+
+<!-- ADD ROOM MODAL -->
+<div class="modal-overlay" id="modal-room">
+  <div class="modal">
+    <div class="modal-title">
+      <span>Add Room</span>
+      <span class="modal-close" onclick="closeModal(&#39;modal-room&#39;)">✕</span>
+    </div>
+    <div class="form-group">
+      <label>Room Name *</label>
+      <input type="text" id="room-name" placeholder="e.g. Reception, Living Room, Office 1">
+    </div>
+    <div class="form-group">
+      <label>Room Type</label>
+      <select id="room-type">
+        <option value="">Select…</option>
+        <option>Reception / Lobby</option>
+        <option>Office / Workspace</option>
+        <option>Meeting Room</option>
+        <option>Living Room</option>
+        <option>Bedroom</option>
+        <option>Kitchen / Dining</option>
+        <option>Bathroom</option>
+        <option>Hallway / Corridor</option>
+        <option>Cafe / Restaurant Floor</option>
+        <option>Shopfront / Retail</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div style="margin-top:1.2rem;">
+
+      <div class="checklist-section">
+        <div class="checklist-section-title">☀️ Natural Light</div>
+        <div class="checklist-options cols-3" id="cl-light">
+          <div class="checklist-option" data-group="light" data-val="bright" onclick="selectOpt(this)"><span class="opt-icon">🌞</span>Bright</div>
+          <div class="checklist-option" data-group="light" data-val="medium" onclick="selectOpt(this)"><span class="opt-icon">⛅</span>Medium</div>
+          <div class="checklist-option" data-group="light" data-val="low" onclick="selectOpt(this)"><span class="opt-icon">🌑</span>Low</div>
+        </div>
+      </div>
+
+      <div class="checklist-section">
+        <div class="checklist-section-title">💨 Airflow</div>
+        <div class="checklist-options cols-3" id="cl-airflow">
+          <div class="checklist-option" data-group="airflow" data-val="good" onclick="selectOpt(this)"><span class="opt-icon">🌬️</span>Good</div>
+          <div class="checklist-option" data-group="airflow" data-val="moderate" onclick="selectOpt(this)"><span class="opt-icon">🍃</span>Moderate</div>
+          <div class="checklist-option" data-group="airflow" data-val="poor" onclick="selectOpt(this)"><span class="opt-icon">😮‍💨</span>Poor/AC</div>
+        </div>
+      </div>
+
+      <div class="checklist-section">
+        <div class="checklist-section-title">💧 Humidity</div>
+        <div class="checklist-options cols-3" id="cl-humidity">
+          <div class="checklist-option" data-group="humidity" data-val="high" onclick="selectOpt(this)"><span class="opt-icon">💦</span>High</div>
+          <div class="checklist-option" data-group="humidity" data-val="medium" onclick="selectOpt(this)"><span class="opt-icon">🌊</span>Medium</div>
+          <div class="checklist-option" data-group="humidity" data-val="low" onclick="selectOpt(this)"><span class="opt-icon">🏜️</span>Low/Dry</div>
+        </div>
+      </div>
+
+      <div class="checklist-section">
+        <div class="checklist-section-title">🚶 Foot Traffic</div>
+        <div class="checklist-options cols-3" id="cl-traffic">
+          <div class="checklist-option" data-group="traffic" data-val="high" onclick="selectOpt(this)"><span class="opt-icon">👥</span>High</div>
+          <div class="checklist-option" data-group="traffic" data-val="medium" onclick="selectOpt(this)"><span class="opt-icon">🚶</span>Medium</div>
+          <div class="checklist-option" data-group="traffic" data-val="low" onclick="selectOpt(this)"><span class="opt-icon">🤫</span>Low</div>
+        </div>
+      </div>
+
+      <div class="checklist-section">
+        <div class="checklist-section-title">🐾 Safety Considerations</div>
+        <div class="checklist-options" id="cl-safety">
+          <div class="checklist-option" data-group="safety" data-val="pets" onclick="selectOpt(this, true)"><span class="opt-icon">🐕</span>Pets present</div>
+          <div class="checklist-option" data-group="safety" data-val="children" onclick="selectOpt(this, true)"><span class="opt-icon">👶</span>Children</div>
+          <div class="checklist-option" data-group="safety" data-val="allergies" onclick="selectOpt(this, true)"><span class="opt-icon">🤧</span>Allergies</div>
+          <div class="checklist-option" data-group="safety" data-val="none" onclick="selectOpt(this, true)"><span class="opt-icon">✅</span>None</div>
+        </div>
+      </div>
+
+      <div class="checklist-section">
+        <div class="checklist-section-title">📐 Room Size</div>
+        <div class="checklist-options cols-3" id="cl-size">
+          <div class="checklist-option" data-group="size" data-val="small" onclick="selectOpt(this)"><span class="opt-icon">📦</span>Small<br><span style="font-size:0.65rem;color:var(--muted);">&lt;20m²</span></div>
+          <div class="checklist-option" data-group="size" data-val="medium" onclick="selectOpt(this)"><span class="opt-icon">🏠</span>Medium<br><span style="font-size:0.65rem;color:var(--muted);">20–50m²</span></div>
+          <div class="checklist-option" data-group="size" data-val="large" onclick="selectOpt(this)"><span class="opt-icon">🏢</span>Large<br><span style="font-size:0.65rem;color:var(--muted);">&gt;50m²</span></div>
+        </div>
+      </div>
+
+      <div class="checklist-section">
+        <div class="checklist-section-title">🎨 Interior Style</div>
+        <div class="checklist-options" id="cl-style">
+          <div class="checklist-option" data-group="style" data-val="modern" onclick="selectOpt(this)"><span class="opt-icon">🖤</span>Modern/Minimal</div>
+          <div class="checklist-option" data-group="style" data-val="warm" onclick="selectOpt(this)"><span class="opt-icon">🪵</span>Warm/Natural</div>
+          <div class="checklist-option" data-group="style" data-val="industrial" onclick="selectOpt(this)"><span class="opt-icon">⚙️</span>Industrial</div>
+          <div class="checklist-option" data-group="style" data-val="luxe" onclick="selectOpt(this)"><span class="opt-icon">✨</span>Luxe/Premium</div>
+        </div>
+      </div>
+
+      <div class="checklist-section">
+        <div class="checklist-section-title">📍 Placement Preference</div>
+        <div class="checklist-options" id="cl-placement">
+          <div class="checklist-option" data-group="placement" data-val="floor" onclick="selectOpt(this, true)"><span class="opt-icon">🪴</span>Floor plant</div>
+          <div class="checklist-option" data-group="placement" data-val="desk" onclick="selectOpt(this, true)"><span class="opt-icon">🖥️</span>Desk/table</div>
+          <div class="checklist-option" data-group="placement" data-val="shelf" onclick="selectOpt(this, true)"><span class="opt-icon">📚</span>Shelf/ledge</div>
+          <div class="checklist-option" data-group="placement" data-val="corner" onclick="selectOpt(this, true)"><span class="opt-icon">📐</span>Corner feature</div>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:1rem;">
+        <label>Room Notes</label>
+        <textarea id="room-notes" placeholder="e.g. Tall ceilings, dark timber floors, near a heat vent…" style="min-height:60px;"></textarea>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:0.75rem; margin-top:1.2rem;">
+      <button class="btn btn-secondary" style="flex:1;" onclick="closeModal(&#39;modal-room&#39;)">Cancel</button>
+      <button class="btn btn-primary" style="flex:2;" onclick="saveRoom()">Save Room &amp; Get Recommendations →</button>
+    </div>
+  </div>
+</div>
+
+<!-- RECOMMENDATIONS MODAL -->
+<div class="modal-overlay" id="modal-recs">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="recs-room-title">Plant Recommendations</span>
+      <span class="modal-close" onclick="closeModal(&#39;modal-recs&#39;)">✕</span>
+    </div>
+    <p style="font-size:0.82rem; color:var(--muted); margin-bottom:1rem;">Based on the room conditions, here are the best matches. Tick the ones you want to include in the quote.</p>
+    <div id="recs-list"></div>
+    <div style="margin-top:1.2rem;">
+      <button class="btn btn-primary btn-full" onclick="saveRecs()">Add Selected Plants to Quote →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──
+const SUPABASE_URL = 'https://vgegsaarmzuqpacisbrl.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_wk9jv_8MPmgdM2NvIHclOg_nJDtlZlX';
+
+const PLANTS = [
+  { id:'fiddle', name:'Fiddle Leaf Fig', sci:'Ficus lyrata', img:'https://groundworkgardens.com.au/wp-content/uploads/2026/06/01_fiddle_leaf_fig.png', tier:'large', price:90, light:['bright'], airflow:['good','moderate'], humidity:['medium','high'], traffic:['low','medium'], safe:true, style:['modern','warm','luxe'], placement:['floor','corner'], desc:'Bold statement plant for high-light spaces' },
+  { id:'zz', name:'ZZ Plant', sci:'Zamioculcas zamiifolia', img:'https://groundworkgardens.com.au/wp-content/uploads/2026/06/02_zz_plant.png', tier:'medium', price:45, light:['low','medium','bright'], airflow:['good','moderate','poor'], humidity:['low','medium'], traffic:['low','medium','high'], safe:true, style:['modern','industrial'], placement:['floor','desk','corner'], desc:'Virtually indestructible, perfect for any condition' },
+  { id:'peace', name:'Peace Lily', sci:'Spathiphyllum', img:'https://groundworkgardens.com.au/wp-content/uploads/2026/06/03_peace_lily.png', tier:'small', price:22, light:['low','medium'], airflow:['moderate','good'], humidity:['medium','high'], traffic:['low','medium'], safe:false, style:['warm','luxe'], placement:['desk','floor','shelf'], desc:'Air purifying, flowers indoors' },
+  { id:'kentia', name:'Kentia Palm', sci:'Howea forsteriana', img:'https://groundworkgardens.com.au/wp-content/uploads/2026/06/04_kentia_palm.png', tier:'large', price:90, light:['medium','bright'], airflow:['good','moderate'], humidity:['medium'], traffic:['low','medium'], safe:true, style:['luxe','warm','modern'], placement:['floor','corner'], desc:'Iconic elegant palm, suits premium spaces' },
+  { id:'snake', name:'Snake Plant', sci:'Sansevieria trifasciata', img:'https://groundworkgardens.com.au/wp-content/uploads/2026/06/05_snake_plant.png', tier:'medium', price:45, light:['low','medium','bright'], airflow:['good','moderate','poor'], humidity:['low','medium'], traffic:['low','medium','high'], safe:true, style:['modern','industrial','minimal'], placement:['floor','desk','corner','shelf'], desc:'Architectural and nearly unkillable' },
+  { id:'pothos', name:'Pothos', sci:'Epipremnum aureum', img:'https://groundworkgardens.com.au/wp-content/uploads/2026/06/06_pothos_devils_ivy.png', tier:'small', price:22, light:['low','medium'], airflow:['good','moderate','poor'], humidity:['low','medium','high'], traffic:['low','medium'], safe:false, style:['warm','modern'], placement:['shelf','desk'], desc:'Trailing beauty, great for shelves and ledges' },
+  { id:'rubber', name:'Rubber Plant', sci:'Ficus elastica', img:'https://groundworkgardens.com.au/wp-content/uploads/2026/06/07_rubber_plant.png', tier:'medium', price:45, light:['medium','bright'], airflow:['good','moderate'], humidity:['medium'], traffic:['low','medium'], safe:true, style:['modern','industrial','luxe'], placement:['floor','corner'], desc:'Bold burgundy leaves, strong visual presence' },
+  { id:'bird', name:'Bird of Paradise', sci:'Strelitzia reginae', img:'https://groundworkgardens.com.au/wp-content/uploads/2026/06/08_bird_of_paradise.png', tier:'large', price:90, light:['bright'], airflow:['good'], humidity:['medium'], traffic:['low'], safe:true, style:['luxe','warm'], placement:['floor','corner'], desc:'Ultimate luxury statement plant' },
+];
+
+// ── STATE ──
+let currentJob = null;
+let currentRoomIndex = null;
+let currentChecklist = {};
+let jobs = [];
+
+// ── HELPERS ──
+async function sbFetch(path, opts={}) {
+  const res = await fetch(SUPABASE_URL + path, {
+    ...opts,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer || '',
+      ...opts.headers
+    }
+  });
+  if (!res.ok) throw await res.text();
+  return res.status === 204 ? null : res.json();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+function switchTab(tab) {
+  document.getElementById('panel-jobs').style.display = tab === 'jobs' ? 'block' : 'none';
+  document.getElementById('panel-enquiries').style.display = tab === 'enquiries' ? 'block' : 'none';
+  document.getElementById('tab-jobs').classList.toggle('active', tab === 'jobs');
+  document.getElementById('tab-enquiries').classList.toggle('active', tab === 'enquiries');
+  if (tab === 'enquiries') loadEnquiries();
+}
+
+function selectOpt(el, multi=false) {
+  const group = el.dataset.group;
+  if (!multi) {
+    document.querySelectorAll(`[data-group="${group}"]`).forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    currentChecklist[group] = el.dataset.val;
+  } else {
+    el.classList.toggle('selected');
+    if (!currentChecklist[group]) currentChecklist[group] = [];
+    const val = el.dataset.val;
+    if (el.classList.contains('selected')) {
+      if (!currentChecklist[group].includes(val)) currentChecklist[group].push(val);
+    } else {
+      currentChecklist[group] = currentChecklist[group].filter(v => v !== val);
+    }
+  }
+}
+
+// ── PLANT MATCHING ──
+function matchPlants(checklist) {
+  return PLANTS.map(plant => {
+    let score = 0;
+    let reasons = [];
+
+    if (checklist.light && plant.light.includes(checklist.light)) { score += 3; reasons.push('good light match'); }
+    if (checklist.airflow && plant.airflow.includes(checklist.airflow)) { score += 2; }
+    if (checklist.humidity && plant.humidity.includes(checklist.humidity)) { score += 2; reasons.push('suits humidity'); }
+    if (checklist.traffic && plant.traffic.includes(checklist.traffic)) { score += 1; }
+    if (checklist.style && plant.style.includes(checklist.style)) { score += 2; reasons.push('matches interior style'); }
+
+    const safetyFlags = Array.isArray(checklist.safety) ? checklist.safety : [];
+    if ((safetyFlags.includes('pets') || safetyFlags.includes('children')) && !plant.safe) score -= 5;
+    if ((safetyFlags.includes('pets') || safetyFlags.includes('children')) && plant.safe) { score += 2; reasons.push('pet & child safe'); }
+
+    const placements = Array.isArray(checklist.placement) ? checklist.placement : [];
+    if (placements.some(p => plant.placement.includes(p))) { score += 1; reasons.push('suits placement'); }
+
+    return { ...plant, score, reasons, match: Math.min(100, Math.round((score / 11) * 100)) };
+  }).sort((a, b) => b.score - a.score);
+}
+
+// ── JOB MANAGEMENT ──
+function goHome() { showScreen('screen-main'); loadJobs(); }
+
+function startNewJob() {
+  document.getElementById('nj-fname').value = '';
+  document.getElementById('nj-lname').value = '';
+  document.getElementById('nj-phone').value = '';
+  document.getElementById('nj-email').value = '';
+  document.getElementById('nj-address').value = '';
+  document.getElementById('nj-type').value = '';
+  document.getElementById('nj-notes').value = '';
+  showScreen('screen-new-job');
+}
+
+async function saveNewJob() {
+  const fname = document.getElementById('nj-fname').value.trim();
+  const lname = document.getElementById('nj-lname').value.trim();
+  if (!fname || !lname) { toast('⚠️ Please enter client name'); return; }
+
+  const job = {
+    client_name: fname + ' ' + lname,
+    client_phone: document.getElementById('nj-phone').value.trim(),
+    client_email: document.getElementById('nj-email').value.trim(),
+    client_address: document.getElementById('nj-address').value.trim(),
+    property_type: document.getElementById('nj-type').value,
+    notes: document.getElementById('nj-notes').value.trim(),
+    rooms: [],
+    selected_plants: [],
+    total_monthly: 0,
+    setup_fee: 75,
+    status: 'assessment'
+  };
+
+  try {
+    const res = await sbFetch('/rest/v1/plant_hire_jobs', {
+      method: 'POST',
+      prefer: 'return=representation',
+      body: JSON.stringify(job)
+    });
+    currentJob = res[0];
+    openJob(currentJob);
+    toast('✅ Job created!');
+  } catch(e) {
+    toast('❌ Error saving job');
+    console.error(e);
+  }
+}
+
+function openJob(job) {
+  currentJob = job;
+  document.getElementById('job-title').textContent = job.client_name;
+  document.getElementById('job-subtitle').textContent = job.client_address || job.property_type || 'Assessment in progress';
+  renderRooms();
+  showScreen('screen-job');
+}
+
+async function loadJobs() {
+  try {
+    const data = await sbFetch('/rest/v1/plant_hire_jobs?order=created_at.desc&limit=50');
+    jobs = data;
+    const list = document.getElementById('jobs-list');
+    if (!data.length) {
+      list.innerHTML = `<div class="jobs-empty"><span class="empty-icon">🌱</span><p>No jobs yet.<br>Tap <strong>New Job</strong> to start your first assessment.</p></div>`;
+      return;
+    }
+    list.innerHTML = data.map(job => `
+      <div class="job-card" onclick="openJob(${JSON.stringify(job).replace(/"/g,'&quot;')})">
+        <div class="job-card-icon">${job.property_type?.includes('Commercial') ? '🏢' : '🏠'}</div>
+        <div class="job-card-info">
+          <div class="job-card-name">${job.client_name}</div>
+          <div class="job-card-meta">${job.client_address || job.property_type || 'No address'} · ${(job.rooms||[]).length} room${(job.rooms||[]).length!==1?'s':''}</div>
+        </div>
+        <span class="status-badge status-${job.status}">${job.status}</span>
+        <div class="job-card-arrow">›</div>
+      </div>
+    `).join('');
+  } catch(e) { toast('❌ Error loading jobs'); }
+}
+
+async function loadEnquiries() {
+  try {
+    const data = await sbFetch('/rest/v1/plant_hire_enquiries?order=created_at.desc&limit=50');
+    const list = document.getElementById('enquiries-list');
+    if (!data.length) {
+      list.innerHTML = `<div class="jobs-empty"><span class="empty-icon">📭</span><p>No enquiries yet.<br>They'll appear here once someone fills in your website form.</p></div>`;
+      return;
+    }
+    list.innerHTML = data.map(e => `
+      <div class="enq-card">
+        <div class="enq-card-top">
+          <div class="enq-name">${e.first_name} ${e.last_name}</div>
+          <div class="enq-date">${new Date(e.created_at).toLocaleDateString('en-AU')}</div>
+        </div>
+        <div class="enq-details">
+          <div class="enq-detail-row"><span>📞</span><span>${e.phone || '—'}</span></div>
+          <div class="enq-detail-row"><span>📧</span><span>${e.email || '—'}</span></div>
+          <div class="enq-detail-row"><span>📍</span><span>${e.suburb || '—'} · ${e.space_type || '—'}</span></div>
+          <div class="enq-detail-row"><span>🌿</span><span>${e.plant_count || '—'} · ${e.plants_interested || '—'}</span></div>
+          ${e.notes ? `<div class="enq-detail-row"><span>📝</span><span>${e.notes}</span></div>` : ''}
+        </div>
+        <div style="margin-top:0.75rem; display:flex; gap:0.5rem;">
+          <button class="btn btn-primary btn-sm" onclick="convertToJob('${e.id}', '${e.first_name}', '${e.last_name}', '${e.phone||''}', '${e.email||''}', '${e.suburb||''}')">Convert to Job</button>
+          <span class="status-badge status-${e.status||'new'}">${e.status||'new'}</span>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) { toast('❌ Error loading enquiries'); }
+}
+
+async function convertToJob(id, fname, lname, phone, email, suburb) {
+  const job = {
+    client_name: fname + ' ' + lname,
+    client_phone: phone,
+    client_email: email,
+    client_address: suburb,
+    property_type: '',
+    rooms: [], selected_plants: [], total_monthly: 0, setup_fee: 75, status: 'assessment'
+  };
+  try {
+    const res = await sbFetch('/rest/v1/plant_hire_jobs', {
+      method: 'POST', prefer: 'return=representation', body: JSON.stringify(job)
+    });
+    currentJob = res[0];
+    openJob(currentJob);
+    toast('✅ Converted to job!');
+  } catch(e) { toast('❌ Error'); }
+}
+
+// ── ROOMS ──
+function openAddRoom() {
+  currentChecklist = {};
+  currentRoomIndex = null;
+  document.getElementById('room-name').value = '';
+  document.getElementById('room-type').value = '';
+  document.getElementById('room-notes').value = '';
+  document.querySelectorAll('.checklist-option').forEach(o => o.classList.remove('selected'));
+  openModal('modal-room');
+}
+
+function saveRoom() {
+  const name = document.getElementById('room-name').value.trim();
+  if (!name) { toast('⚠️ Please enter a room name'); return; }
+
+  const room = {
+    name,
+    type: document.getElementById('room-type').value,
+    notes: document.getElementById('room-notes').value.trim(),
+    checklist: { ...currentChecklist },
+    plants: []
+  };
+
+  if (!currentJob.rooms) currentJob.rooms = [];
+
+  if (currentRoomIndex !== null) {
+    currentJob.rooms[currentRoomIndex] = { ...currentJob.rooms[currentRoomIndex], ...room };
+  } else {
+    currentJob.rooms.push(room);
+    currentRoomIndex = currentJob.rooms.length - 1;
+  }
+
+  closeModal('modal-room');
+  showRecs(currentRoomIndex);
+}
+
+function showRecs(roomIdx) {
+  currentRoomIndex = roomIdx;
+  const room = currentJob.rooms[roomIdx];
+  const recs = matchPlants(room.checklist);
+
+  document.getElementById('recs-room-title').textContent = '🌿 ' + room.name;
+
+  document.getElementById('recs-list').innerHTML = recs.map(p => `
+    <div class="rec-card ${(room.plants||[]).some(rp=>rp.id===p.id) ? 'selected' : ''}" id="rec-${p.id}">
+      <img class="rec-plant-img" src="${p.img}" alt="${p.name}">
+      <div class="rec-info">
+        <div class="rec-name">${p.name}</div>
+        <div class="rec-reason">${p.desc}${p.reasons.length ? ' · ' + p.reasons.slice(0,2).join(', ') : ''}</div>
+        <div class="rec-price">$${p.price}/month</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;">
+        <span class="rec-match">${p.match}% match</span>
+        <div class="rec-checkbox"><input type="checkbox" id="chk-${p.id}" ${(room.plants||[]).some(rp=>rp.id===p.id)?'checked':''} onchange="togglePlant('${p.id}', this.checked)"></div>
+      </div>
+    </div>
+  `).join('');
+
+  openModal('modal-recs');
+}
+
+function togglePlant(plantId, checked) {
+  const room = currentJob.rooms[currentRoomIndex];
+  if (!room.plants) room.plants = [];
+  const plant = PLANTS.find(p => p.id === plantId);
+  if (checked) {
+    if (!room.plants.some(p => p.id === plantId)) room.plants.push(plant);
+    document.getElementById('rec-' + plantId)?.classList.add('selected');
+  } else {
+    room.plants = room.plants.filter(p => p.id !== plantId);
+    document.getElementById('rec-' + plantId)?.classList.remove('selected');
+  }
+}
+
+async function saveRecs() {
+  closeModal('modal-recs');
+  await syncJob();
+  renderRooms();
+  toast('✅ Plants saved!');
+}
+
+function renderRooms() {
+  const rooms = currentJob.rooms || [];
+  const list = document.getElementById('rooms-list');
+  if (!rooms.length) {
+    list.innerHTML = `<div class="jobs-empty" style="padding:2rem 1.5rem;"><span class="empty-icon">🚪</span><p>No rooms added yet.<br>Tap <strong>Add Room</strong> to begin your assessment.</p></div>`;
+    return;
+  }
+  list.innerHTML = rooms.map((room, i) => `
+    <div class="room-card">
+      <div class="room-card-header" onclick="toggleRoomBody(${i})">
+        <span class="room-icon">🚪</span>
+        <div class="room-info">
+          <div class="room-name">${room.name}</div>
+          <div class="room-meta">${room.type || 'Room'} · ${(room.plants||[]).length} plant${(room.plants||[]).length!==1?'s':''} selected</div>
+        </div>
+        <div class="room-actions">
+          <button class="btn btn-sm btn-secondary btn-icon" onclick="event.stopPropagation();editRoom(${i})" title="Edit">✏️</button>
+          <button class="btn btn-sm btn-secondary btn-icon" onclick="event.stopPropagation();showRecs(${i})" title="Plants">🌿</button>
+          <button class="btn btn-sm btn-danger btn-icon" onclick="event.stopPropagation();deleteRoom(${i})" title="Delete">🗑️</button>
+        </div>
+      </div>
+      <div class="room-body" id="room-body-${i}" style="display:none;">
+        <div style="margin-bottom:0.8rem;">
+          ${renderChecklistSummary(room.checklist)}
+        </div>
+        ${room.notes ? `<p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.8rem;">📝 ${room.notes}</p>` : ''}
+        <div style="font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--green-dark);margin-bottom:0.5rem;">Selected Plants</div>
+        ${(room.plants||[]).length ? room.plants.map(p => `
+          <div style="display:flex;align-items:center;gap:0.8rem;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+            <img src="${p.img}" style="width:36px;height:36px;border-radius:6px;object-fit:contain;background:var(--cream);">
+            <div style="flex:1;"><div style="font-size:0.85rem;font-weight:500;">${p.name}</div><div style="font-size:0.75rem;color:var(--muted);">$${p.price}/month</div></div>
+          </div>
+        `).join('') : '<p style="font-size:0.82rem;color:var(--muted);">No plants selected yet — tap 🌿 to add.</p>'}
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderChecklistSummary(cl) {
+  const items = [];
+  if (cl.light) items.push(`☀️ ${cl.light} light`);
+  if (cl.airflow) items.push(`💨 ${cl.airflow} airflow`);
+  if (cl.humidity) items.push(`💧 ${cl.humidity} humidity`);
+  if (cl.traffic) items.push(`🚶 ${cl.traffic} traffic`);
+  if (cl.size) items.push(`📐 ${cl.size}`);
+  if (cl.style) items.push(`🎨 ${cl.style}`);
+  const safety = Array.isArray(cl.safety) ? cl.safety : [];
+  if (safety.length && !safety.includes('none')) items.push(`⚠️ ${safety.join(', ')}`);
+  return items.map(i => `<span style="display:inline-block;background:var(--green-light);color:var(--green-dark);padding:0.18rem 0.6rem;border-radius:20px;font-size:0.72rem;font-weight:500;margin:0.15rem;">${i}</span>`).join('');
+}
+
+function toggleRoomBody(i) {
+  const body = document.getElementById('room-body-' + i);
+  body.style.display = body.style.display === 'none' ? 'block' : 'none';
+}
+
+function editRoom(i) {
+  currentRoomIndex = i;
+  const room = currentJob.rooms[i];
+  document.getElementById('room-name').value = room.name;
+  document.getElementById('room-type').value = room.type || '';
+  document.getElementById('room-notes').value = room.notes || '';
+  currentChecklist = { ...room.checklist };
+
+  // Re-select options
+  document.querySelectorAll('.checklist-option').forEach(o => {
+    const group = o.dataset.group;
+    const val = o.dataset.val;
+    const cl = currentChecklist[group];
+    if (Array.isArray(cl)) {
+      o.classList.toggle('selected', cl.includes(val));
+    } else {
+      o.classList.toggle('selected', cl === val);
+    }
+  });
+  openModal('modal-room');
+}
+
+async function deleteRoom(i) {
+  if (!confirm(`Delete room "${currentJob.rooms[i].name}"?`)) return;
+  currentJob.rooms.splice(i, 1);
+  await syncJob();
+  renderRooms();
+  toast('🗑️ Room deleted');
+}
+
+function editJobDetails() {
+  document.getElementById('nj-fname').value = currentJob.client_name.split(' ')[0] || '';
+  document.getElementById('nj-lname').value = currentJob.client_name.split(' ').slice(1).join(' ') || '';
+  document.getElementById('nj-phone').value = currentJob.client_phone || '';
+  document.getElementById('nj-email').value = currentJob.client_email || '';
+  document.getElementById('nj-address').value = currentJob.client_address || '';
+  document.getElementById('nj-type').value = currentJob.property_type || '';
+  document.getElementById('nj-notes').value = currentJob.notes || '';
+  showScreen('screen-new-job');
+}
+
+async function syncJob() {
+  if (!currentJob?.id) return;
+  const allPlants = (currentJob.rooms || []).flatMap(r => r.plants || []);
+  const total = allPlants.reduce((sum, p) => sum + p.price, 0);
+  currentJob.total_monthly = total;
+  try {
+    await sbFetch(`/rest/v1/plant_hire_jobs?id=eq.${currentJob.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ rooms: currentJob.rooms, total_monthly: total, updated_at: new Date().toISOString() })
+    });
+  } catch(e) { console.error('Sync error', e); }
+}
+
+// ── QUOTE ──
+function viewQuote() {
+  const rooms = currentJob.rooms || [];
+  const allPlants = rooms.flatMap(r => (r.plants||[]).map(p => ({ ...p, room: r.name })));
+  const monthly = allPlants.reduce((s,p) => s+p.price, 0);
+  const setup = currentJob.setup_fee || 75;
+
+  document.getElementById('quote-client-name').textContent = currentJob.client_name;
+
+  const byRoom = rooms.map(r => ({
+    name: r.name,
+    plants: r.plants || [],
+    subtotal: (r.plants||[]).reduce((s,p) => s+p.price, 0)
+  })).filter(r => r.plants.length);
+
+  document.getElementById('quote-content').innerHTML = `
+    <div class="quote-card">
+      <div class="quote-card-header">
+        <h3>🌿 Groundwork Gardens — Plant Hire Quote</h3>
+        <p>${currentJob.client_name} · ${currentJob.client_address || ''} · ${new Date().toLocaleDateString('en-AU')}</p>
+      </div>
+      <div class="quote-body">
+        ${byRoom.map(r => `
+          <div style="margin-bottom:0.8rem;">
+            <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--green-dark);margin-bottom:0.4rem;">🚪 ${r.name}</div>
+            ${r.plants.map(p => `
+              <div class="quote-line">
+                <div>
+                  <div class="quote-line-label">${p.name}</div>
+                  <div class="quote-line-sub">${p.tier} plant · monthly lease</div>
+                </div>
+                <div class="quote-line-price">$${p.price}/mo</div>
+              </div>
+            `).join('')}
+            <div class="quote-line" style="font-weight:600;">
+              <div class="quote-line-label">Room subtotal</div>
+              <div class="quote-line-price">$${r.subtotal}/mo</div>
+            </div>
+          </div>
+        `).join('<div class="divider"></div>')}
+        <div class="quote-line" style="margin-top:0.5rem;">
+          <div>
+            <div class="quote-line-label">One-off setup fee</div>
+            <div class="quote-line-sub">Delivery, installation & styling</div>
+          </div>
+          <div class="quote-line-price">$${setup}</div>
+        </div>
+      </div>
+      <div class="quote-total">
+        <div>
+          <div class="quote-total-label">Monthly Total</div>
+          <div style="font-size:0.75rem;opacity:0.7;">${allPlants.length} plant${allPlants.length!==1?'s':''} across ${byRoom.length} room${byRoom.length!==1?'s':''}</div>
+        </div>
+        <div class="quote-total-price">$${monthly}/mo</div>
+      </div>
+    </div>
+    <div class="quote-card">
+      <div class="quote-body">
+        <div style="font-size:0.78rem;color:var(--muted);line-height:1.6;">
+          <p style="margin-bottom:0.5rem;">✓ All plants and decorative pots included</p>
+          <p style="margin-bottom:0.5rem;">✓ 2× monthly maintenance visits</p>
+          <p style="margin-bottom:0.5rem;">✓ Free replacement guarantee — if a plant dies, we replace it</p>
+          <p style="margin-bottom:0.5rem;">✓ No lock-in contracts — cancel or change anytime</p>
+          <p>✓ LECA system — virtually no bugs or mess</p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  showScreen('screen-quote');
+}
+
+function generatePDF() {
+  window.print();
+  toast('🖨️ Use Save as PDF in print dialog');
+}
+
+// ── INIT ──
+window.onload = () => {
+  loadJobs();
+};
+</script>
+
+
+</body></html>
