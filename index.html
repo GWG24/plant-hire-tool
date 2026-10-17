@@ -667,6 +667,86 @@ input[type="range"] {
 </style>
 </head>
 <body>
+<!-- SIGN-IN SCREEN -->
+<div id="ggLogin" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:100000;background:#14301f;flex-direction:column;align-items:center;justify-content:center;padding:24px;">
+  <img src="logo.png" alt="Groundwork Gardens" style="height:120px;width:auto;max-width:90vw;object-fit:contain;margin-bottom:10px;">
+  <div style="color:#e8c99b;letter-spacing:.15em;text-transform:uppercase;font-size:13px;margin-bottom:20px;">Sign in</div>
+  <input id="ggLoginEmail" type="email" placeholder="Email" autocomplete="username" onkeydown="event.stopPropagation()" style="width:100%;max-width:320px;padding:14px;border-radius:8px;border:none;font-size:16px;margin-bottom:10px;box-sizing:border-box;">
+  <input id="ggLoginPass" type="password" placeholder="Password" autocomplete="current-password" onkeydown="event.stopPropagation();if(event.key==='Enter')ggDoLogin()" style="width:100%;max-width:320px;padding:14px;border-radius:8px;border:none;font-size:16px;margin-bottom:14px;box-sizing:border-box;">
+  <button id="ggLoginBtn" onclick="ggDoLogin()" style="width:100%;max-width:320px;padding:14px;border-radius:8px;border:none;background:#e8c99b;color:#1a1a1a;font-size:16px;font-weight:700;cursor:pointer;">Sign in</button>
+  <div id="ggLoginErr" style="color:#ff9b9b;font-size:14px;margin-top:12px;min-height:20px;text-align:center;"></div>
+</div>
+<script>
+const GG_URL='https://vgegsaarmzuqpacisbrl.supabase.co';
+const GG_ANON='sb_publishable_wk9jv_8MPmgdM2NvIHclOg_nJDtlZlX';
+const GG_AUTH_KEY='gg_auth_session';
+const _ggFetch=window.fetch.bind(window);
+
+function ggGetSession(){
+  try{return JSON.parse(localStorage.getItem(GG_AUTH_KEY)||'null');}catch(e){return null;}
+}
+function ggSetSession(s){
+  try{
+    if(s) localStorage.setItem(GG_AUTH_KEY,JSON.stringify(s));
+    else localStorage.removeItem(GG_AUTH_KEY);
+  }catch(e){}
+}
+function ggStoreTokens(j){
+  ggSetSession({access_token:j.access_token,refresh_token:j.refresh_token,expires_at:Math.floor(Date.now()/1000)+(j.expires_in||3600)});
+}
+async function ggSignIn(email,password){
+  const res=await _ggFetch(GG_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':GG_ANON,'Content-Type':'application/json'},body:JSON.stringify({email:email,password:password})});
+  const j=await res.json();
+  if(!res.ok) throw new Error(j.error_description||j.msg||'Sign in failed');
+  ggStoreTokens(j);
+  return true;
+}
+function ggSignOut(){ggSetSession(null);location.reload();}
+async function ggToken(){
+  const s=ggGetSession();
+  if(!s) return null;
+  if(s.expires_at-60 > Math.floor(Date.now()/1000)) return s.access_token;
+  try{
+    const res=await _ggFetch(GG_URL+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:{'apikey':GG_ANON,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:s.refresh_token})});
+    if(!res.ok){ggSetSession(null);return null;}
+    const j=await res.json();
+    ggStoreTokens(j);
+    return j.access_token;
+  }catch(e){return null;}
+}
+window.fetch=async function(url,opts){
+  try{
+    if(typeof url==='string' && url.indexOf(GG_URL+'/rest/v1/')===0){
+      const t=await ggToken();
+      if(t){
+        opts=Object.assign({},opts);
+        opts.headers=Object.assign({},opts.headers,{'Authorization':'Bearer '+t});
+      }
+    }
+  }catch(e){}
+  return _ggFetch(url,opts);
+};
+(function(){
+  var ok=false;
+  try{ok=!!localStorage.getItem(GG_AUTH_KEY);}catch(e){}
+  if(!ok) document.getElementById('ggLogin').style.display='flex';
+})();
+async function ggDoLogin(){
+  var email=document.getElementById('ggLoginEmail').value.trim();
+  var pass=document.getElementById('ggLoginPass').value;
+  var err=document.getElementById('ggLoginErr');
+  var btn=document.getElementById('ggLoginBtn');
+  if(!email||!pass){err.textContent='Enter your email and password.';return;}
+  btn.disabled=true;btn.textContent='Signing in...';err.textContent='';
+  try{
+    await ggSignIn(email,pass);
+    location.reload();
+  }catch(e){
+    err.textContent='Sign in failed: '+e.message;
+    btn.disabled=false;btn.textContent='Sign in';
+  }
+}
+</script>
 
 <!-- TOP BAR -->
 <div class="topbar">
