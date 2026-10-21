@@ -1239,13 +1239,43 @@ function startNewJob() {
   document.getElementById('nj-address').value = '';
   document.getElementById('nj-type').value = '';
   document.getElementById('nj-notes').value = '';
+  _editJobId = null;
+  document.querySelector('#screen-new-job .page-title-bar h2').textContent = 'New Job';
+  document.querySelector('#screen-new-job .page-title-bar p').textContent = 'Enter client and property details';
+  document.querySelector('#screen-new-job .back-bar').textContent = '← Cancel';
+  document.querySelector('#screen-new-job .back-bar').setAttribute('onclick', 'goHome()');
+  document.querySelector('#screen-new-job .btn-full').textContent = 'Create Job & Start Assessment →';
   showScreen('screen-new-job');
 }
 
+let _editJobId = null;
 async function saveNewJob() {
   const fname = document.getElementById('nj-fname').value.trim();
   const lname = document.getElementById('nj-lname').value.trim();
   if (!fname || !lname) { toast('⚠️ Please enter client name'); return; }
+
+  if (_editJobId) {
+    const upd = {
+      client_name: fname + ' ' + lname,
+      client_phone: document.getElementById('nj-phone').value.trim(),
+      client_email: document.getElementById('nj-email').value.trim(),
+      client_address: document.getElementById('nj-address').value.trim(),
+      property_type: document.getElementById('nj-type').value,
+      notes: document.getElementById('nj-notes').value.trim(),
+      updated_at: new Date().toISOString()
+    };
+    try {
+      await sbFetch('/rest/v1/plant_hire_jobs?id=eq.' + _editJobId, { method: 'PATCH', body: JSON.stringify(upd) });
+      Object.assign(currentJob, upd);
+      _editJobId = null;
+      openJob(currentJob);
+      toast('✅ Details updated');
+    } catch(e) {
+      toast('❌ Error saving details');
+      console.error(e);
+    }
+    return;
+  }
 
   const job = {
     client_name: fname + ' ' + lname,
@@ -1531,6 +1561,12 @@ function editJobDetails() {
   document.getElementById('nj-address').value = currentJob.client_address || '';
   document.getElementById('nj-type').value = currentJob.property_type || '';
   document.getElementById('nj-notes').value = currentJob.notes || '';
+  _editJobId = currentJob.id;
+  document.querySelector('#screen-new-job .page-title-bar h2').textContent = 'Edit Details';
+  document.querySelector('#screen-new-job .page-title-bar p').textContent = 'Update client and property details';
+  document.querySelector('#screen-new-job .back-bar').textContent = '← Back to Job';
+  document.querySelector('#screen-new-job .back-bar').setAttribute('onclick', "showScreen('screen-job')");
+  document.querySelector('#screen-new-job .btn-full').textContent = 'Save Changes';
   showScreen('screen-new-job');
 }
 
